@@ -30,7 +30,7 @@ export default function VideoCall(props) {
 
   const Push = async user => {
     const res = await fetch(
-      "https://agora-vc-default-rtdb.firebaseio.com/users.json",
+      "https://agora-vc-default-rtdb.firebaseio.com/audiences.json",
       {
         method: "POST",
         headers: {
@@ -38,7 +38,7 @@ export default function VideoCall(props) {
         },
         body: JSON.stringify({
           State: 1,
-          Uid: uid,
+          Uid: user.uid,
           image: "https://iplfarmersamvad.com/files/1665566846049null.jpg",
           userID: "",
           userName: "Megha Joshi",
