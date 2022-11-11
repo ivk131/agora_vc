@@ -40,8 +40,8 @@ export default function VideoCall(props) {
           State: 1,
           Uid: user.uid,
           image: "https://iplfarmersamvad.com/files/1665566846049null.jpg",
-          userID: "",
-          userName: "Megha Joshi",
+          userID: localStorage.getItem("response_userId"),
+          userName: localStorage.getItem("name"),
         }),
       }
     );
@@ -127,49 +127,41 @@ export default function VideoCall(props) {
   }, []);
 
   return (
-    <>
-      <Box
+    <Box
+      style={{
+        background: "#0000",
+        padding: "4px",
+      }}
+    >
+      <Grid
+        container
         style={{
-          height: "100vh",
           background: "#0000",
-          // borderRadius: "8px",
         }}
       >
-        {/* <SignUp /> */}
-        <Grid
-          container
-          direction="column"
-          style={{
-            height: "100vh",
-            background: "#0000",
-            padding: "16px",
-            // borderRadius: "8px",
-          }}
-        >
-          <Grid item style={{ height: "83vh", overflow: "hide" }}>
-            {start && tracks && (
-              <Video
-                tracks={tracks}
-                users={users}
-                fullName={fullName}
-                userName={userName}
-              />
-            )}
-          </Grid>
-          {/* <Toolbar /> */}
-
-          <Grid item style={{ height: "10%" }}>
-            {ready && tracks && (
-              <Controls
-                tracks={tracks}
-                setStart={setStart}
-                setInCall={setInCall}
-                users={users}
-              />
-            )}
-          </Grid>
+        <Grid item xs={12} style={{ height: "85vh" }}>
+          {start && tracks && (
+            <Video
+              tracks={tracks}
+              users={users}
+              fullName={fullName}
+              userName={userName}
+            />
+          )}
         </Grid>
-      </Box>
-    </>
+        {/* <Toolbar /> */}
+
+        <Grid item xs={12}>
+          {ready && tracks && (
+            <Controls
+              tracks={tracks}
+              setStart={setStart}
+              setInCall={setInCall}
+              users={users}
+            />
+          )}
+        </Grid>
+      </Grid>
+    </Box>
   );
 }

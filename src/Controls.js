@@ -22,7 +22,7 @@ import DialogModal from "./components/DialogModal";
 import { Link, Navigate } from "react-router-dom";
 import ScreenShareIcon from "@material-ui/icons/ScreenShare";
 import StopScreenShareIcon from "@material-ui/icons/StopScreenShare";
-
+import PanToolIcon from "@material-ui/icons/PanTool";
 import // createScreenVideoTrack,
 // ScreenVideoTrackInitConfig,
 // ILocalVideoTrack,
@@ -145,132 +145,115 @@ export default function Controls(props) {
     }
   };
 
+  const handleRaiseHand = () => {
+    alert("Raise Hand ?");
+  };
+
   return (
     <Box
-      style={{ background: "#f2f4f6", borderRadius: "8px" }}
-      p={1}
+      style={{
+        background: "#454545",
+        borderRadius: "8px",
+        display: "flex",
+        justifyContent: "center",
+      }}
       justifyContent="center"
+      p={2}
     >
-      <Grid
-        container
-        spacing={1}
-        alignItems="center"
-        display="flex"
-        justify="center"
-      >
+      <Grid container alignItems="center" display="flex" justify="center">
         <Grid item xs={4} sm={1} textAlign="center">
-          <Box className={classes.iconsContainer}>
-            <IconButton
-              variant="contained"
-              color={trackState.audio ? "primary" : ""}
-              onClick={() => mute("audio")}
+          <Box textAlign="center">
+            <Tooltip
+              arrow
+              title={
+                trackState.audio ? "Turn off microphone" : "Turn on microphone"
+              }
             >
-              {trackState.audio ? <MicIcon /> : <MicOffIcon />}
-            </IconButton>
-
-            <Box>
-              <Typography
-                variant="body2"
+              <IconButton
+                variant="contained"
                 color={trackState.audio ? "primary" : ""}
+                onClick={() => mute("audio")}
               >
-                {trackState.audio ? "Mute" : "Unmute"}
-              </Typography>
-            </Box>
+                {trackState.audio ? <MicIcon /> : <MicOffIcon />}
+              </IconButton>
+            </Tooltip>
           </Box>
         </Grid>
 
-        <Grid item xs={4} sm={1}>
-          <Box className={classes.iconsContainer}>
-            <IconButton
-              variant="contained"
-              color={!isMuteAll ? "primary" : ""}
-              // onClick={() => mute("audio")}
-              onClick={() => setisMuteAll(!isMuteAll)}
+        <Grid item xs={4} sm={1} textAlign="center">
+          <Box textAlign="center">
+            <Tooltip
+              arrow
+              title={trackState.video ? "Turn off camera" : "Turn on camera"}
             >
-              {!isMuteAll ? <MicIcon /> : <MicOffIcon />}
-            </IconButton>
-
-            <Box>
-              <Typography variant="body2">
-                {!isMuteAll ? "Mute All" : "Unmute all"}
-              </Typography>
-            </Box>
-          </Box>
-        </Grid>
-
-        <Grid item xs={4} sm={1}>
-          <Box className={classes.iconsContainer}>
-            <IconButton
-              variant="contained"
-              color={trackState.video ? "primary" : ""}
-              onClick={() => mute("video")}
-            >
-              {trackState.video ? <VideocamIcon /> : <VideocamOffIcon />}
-            </IconButton>
-
-            <Box>
-              <Typography
-                variant="body2"
+              <IconButton
+                variant="contained"
                 color={trackState.video ? "primary" : ""}
+                onClick={() => mute("video")}
               >
-                {trackState.video ? "Show" : "Hide"}
-              </Typography>
-            </Box>
+                {trackState.video ? <VideocamIcon /> : <VideocamOffIcon />}
+              </IconButton>
+            </Tooltip>
+          </Box>
+        </Grid>
+
+        <Grid item xs={4} sm={1} textAlign="center">
+          <Box textAlign="center">
+            <Tooltip arrow title={!isSharingEnabled ? "Present Now" : "Stop"}>
+              <IconButton
+                variant="contained"
+                color={isSharingEnabled ? "primary" : ""}
+                onClick={handleScreenShare}
+              >
+                {!isSharingEnabled ? (
+                  <ScreenShareIcon />
+                ) : (
+                  <StopScreenShareIcon />
+                )}
+              </IconButton>
+            </Tooltip>
           </Box>
         </Grid>
 
         <Grid item xs={4} sm={1}>
-          <Box className={classes.iconsContainer}>
-            <IconButton
-              variant="contained"
-              color={isSharingEnabled ? "primary" : ""}
-              onClick={handleScreenShare}
-            >
-              {!isSharingEnabled ? (
-                <ScreenShareIcon />
-              ) : (
-                <StopScreenShareIcon />
-              )}
-            </IconButton>
-
-            <Box>
-              <Typography variant="body2">
-                {!isSharingEnabled ? "Share" : "Stop"}
-              </Typography>
-            </Box>
+          <Box textAlign="center">
+            <Tooltip title="Raise Hand" arrow>
+              <IconButton
+                variant="contained"
+                color={isSharingEnabled ? "primary" : ""}
+                onClick={handleRaiseHand}
+              >
+                <PanToolIcon />
+              </IconButton>
+            </Tooltip>
           </Box>
         </Grid>
 
         <Grid item xs={4} sm={1}>
-          <Box className={classes.iconsContainer}>
-            <IconButton
-              variant="outlined"
-              color="secondary"
-              onClick={() => {
-                leaveChannel();
-                window.location.href = "/group-video-calling-app/welcome";
-              }}
-            >
-              <CallEndIcon />
-            </IconButton>
-            <Box>
-              <Typography variant="body2" color="secondary">
-                Hang call
-              </Typography>
-            </Box>
+          <Box textAlign="center">
+            <Tooltip title=" Hang call" arrow>
+              <IconButton
+                variant="outlined"
+                color="secondary"
+                style={{ color: "red" }}
+                onClick={() => {
+                  leaveChannel();
+                  window.location.href = "/group-video-calling-app/welcome";
+                }}
+              >
+                <CallEndIcon />
+              </IconButton>
+            </Tooltip>
           </Box>
         </Grid>
         {/* <Box pl={3} /> */}
         <Grid item xs={4} sm={1}>
-          <Box className={classes.iconsContainer}>
+          <Box textAlign="center">
             <IconButton>
               <Badge badgeContent={users?.length + 1}>
                 <GroupsIcon />
               </Badge>
             </IconButton>
-            <Box>
-              <Typography variant="body2">Groups</Typography>
-            </Box>
           </Box>
         </Grid>
       </Grid>

@@ -9,6 +9,7 @@ import WelcomeScreen from "./components/WelcomeScreen";
 import axios from "axios";
 import { db } from "../src/utils/firebase";
 import { onValue, ref } from "firebase/database";
+import Header from "./components/header/Header";
 
 function App() {
   const [inCall, setInCall] = useState(true);
@@ -30,6 +31,7 @@ function App() {
 
   return (
     <BrowserRouter>
+      {/* <Header /> */}
       <Routes>
         <Route path="/group-video-calling-app/signup" element={<SignUp />} />
         <Route path="/group-video-calling-app/login" element={<Login />} />

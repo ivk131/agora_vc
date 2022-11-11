@@ -8,7 +8,9 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: #454545;
+  background: #000;
+  /* height: 100vh; */
+  border: "1px solid red";
 }
 
 code {
@@ -18,12 +20,8 @@ code {
 
 .app {
   height: 100vh;
-  background: #0000;
+  background: rgba(31, 30, 30, 0);
 }
-/* #root {
-  height: 100vh;
-  background: #0000;
-} */
 
 .agora_video_player {
   border-radius: 8px;
@@ -61,4 +59,8 @@ code {
   .admin__video__container2 {
     max-height: 50vh !important;
   }
+}
+
+.MuiIconButton-label {
+  color: #fff !important;
 }
