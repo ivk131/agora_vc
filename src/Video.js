@@ -1,10 +1,13 @@
 import { AgoraVideoPlayer } from "agora-rtc-react";
 import { Grid, Box, Card, Typography } from "@material-ui/core";
 import { useState, useEffect } from "react";
+import { onValue, ref } from "firebase/database";
+import { db } from "./utils/firebase";
 
 export default function Video(props) {
   const { users, tracks, fullName, userName } = props;
   const [gridSpacing, setGridSpacing] = useState(12);
+  const [userNamee, setUserName] = useState("");
 
   useEffect(() => {
     // setGridSpacing(Math.max(Math.floor(12 / (users.length + 1)), 4));
@@ -12,10 +15,28 @@ export default function Video(props) {
     console.log("gridSpacing", gridSpacing);
   }, [users, tracks]);
 
+  useEffect(() => {
+    const dbRef = ref(db, "audiences");
+
+    onValue(dbRef, snapshort => {
+      console.log("snapshort", snapshort);
+      setUserName(snapshort.userName);
+    });
+  }, [userNamee]);
+
   console.log("USERS---------------------------", users);
   const totalUsers = users?.length + 1;
   return (
-    <Grid container style={{ height: "100%" }} spacing={1}>
+    <Grid
+      container
+      style={{
+        height: "100%",
+        paddingLeft: "24px",
+        paddingRight: "24px",
+        background: "#454545",
+      }}
+      spacing={1}
+    >
       <Grid
         item
         className="admin__video__container"
@@ -51,11 +72,10 @@ export default function Video(props) {
           videoTrack={tracks[1]}
           id="localPlayerContainer"
           style={{
+            display: "flex",
+            justifyContent: "center",
             height: "100%",
             width: "100%",
-            background: "#454545",
-            borderRadius: "12px",
-            // maxWidth: "250px",
             maxHeight: `${totalUsers} <= 2 ? 100%: 280px`,
             position: "relative",
           }}
@@ -64,10 +84,10 @@ export default function Video(props) {
             style={{
               position: "absolute",
               bottom: "1%",
-              left: "2%",
+              right: "1%",
               zIndex: 1,
-              background: "#fafafa",
-              padding: "2px 4px",
+              background: "#F2F4F6",
+              padding: "2px 8px",
               borderRadius: "4px",
             }}
           >
@@ -117,9 +137,6 @@ export default function Video(props) {
                     position: "relative",
                     height: "100%",
                     width: "100%",
-                    borderRadius: "12px",
-                    background: "#f2f4f6",
-
                     maxHeight: `${totalUsers} <= 2 ? 100%: 280px`,
                   }}
                 >
@@ -127,10 +144,10 @@ export default function Video(props) {
                     style={{
                       position: "absolute",
                       bottom: "1%",
-                      left: "2%",
+                      right: "1%",
                       zIndex: 1,
                       background: "#fafafa",
-                      padding: "2px 4px",
+                      padding: "2px 8px",
                       borderRadius: "4px",
                     }}
                   >
