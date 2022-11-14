@@ -152,7 +152,7 @@ export default function Controls(props) {
   return (
     <Box
       style={{
-        background: "#454545",
+        // background: "#454545",
         borderRadius: "8px",
         display: "flex",
         justifyContent: "center",
