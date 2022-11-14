@@ -235,10 +235,12 @@ export default function Controls(props) {
               <IconButton
                 variant="outlined"
                 color="secondary"
-                style={{ color: "red" }}
+                style={{ color: "red", background: "red" }}
                 onClick={() => {
                   leaveChannel();
-                  window.location.href = "/group-video-calling-app/welcome";
+                  alert("Are you sure, You want to end this merting?");
+                  localStorage.clear();
+                  window.location.href = "/welcome";
                 }}
               >
                 <CallEndIcon />

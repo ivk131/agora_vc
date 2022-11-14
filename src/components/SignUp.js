@@ -48,6 +48,9 @@ function SignUp() {
   };
 
   useEffect(() => {
+    if (localStorage.getItem("isLogin")) {
+      setIsSignUp(true);
+    }
     axios
       .get("https://iplfarmersamvad.com/CMSWSIPL/ws/stateList/json")
       .then(response => {
@@ -107,10 +110,7 @@ function SignUp() {
 
   return (
     <>
-      {isSignup && (
-        <Navigate to="/group-video-calling-app/login" replace={true} />
-      )}
-
+      {isSignup && <Navigate to="/login" replace />}
       <Container maxWidth="xs">
         <Box pt={8}>
           <Box className="" component={Paper} p={2}>
@@ -237,7 +237,7 @@ function SignUp() {
                 <Typography>
                   Already have an account ?{" "}
                   <span>
-                    <Link to="/group-video-calling-app/login">Login</Link>
+                    <Link to="/login">Login</Link>
                   </span>
                 </Typography>
               </Box>

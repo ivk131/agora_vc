@@ -15,8 +15,15 @@ function App() {
   const [inCall, setInCall] = useState(true);
   const [fullName, setFullName] = useState("");
   const [eventsList, setEventsList] = useState([]);
+  const [userLogin, setUserLogin] = useState(false);
 
   useEffect(() => {
+    if (localStorage.getItem("isLogin")) {
+      setUserLogin(true);
+    } else {
+      setUserLogin(false);
+    }
+
     const query = ref(db, "events");
     return onValue(query, snapshort => {
       const data = snapshort.val();
@@ -31,21 +38,22 @@ function App() {
 
   return (
     <BrowserRouter>
-      {/* <Header /> */}
+      {/* {userLogin && <Navigate to="/login" replace={true} />} */}
       <Routes>
-        <Route path="/group-video-calling-app/signup" element={<SignUp />} />
-        <Route path="/group-video-calling-app/login" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/welcome" element={<WelcomeScreen />} />
+        `${userLogin}` ?{" "}
         <Route
-          path="/group-video-calling-app/welcome"
-          element={<WelcomeScreen />}
-        />
-        <Route
-          path="/group-video-calling-app"
+          path="/"
           element={<VideoCall setInCall={setInCall} fullName={fullName} />}
-        />
+        />{" "}
+        : <Route path="/login" element={<Login />} />
       </Routes>
     </BrowserRouter>
   );
 }
 
 export default App;
+
+// /group-video-calling-app

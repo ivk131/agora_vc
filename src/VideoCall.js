@@ -23,6 +23,7 @@ export default function VideoCall(props) {
   const [start, setStart] = useState(false);
   const [userName, setUserName] = useState("");
   const [auidiences, setAuidiences] = useState([]);
+  const [userLogin, setUserLogin] = useState(false);
   // const [isLogin, setIsLogin] = useState(false);
 
   const client = useClient();
@@ -54,6 +55,10 @@ export default function VideoCall(props) {
   };
 
   useEffect(() => {
+    if (localStorage.getItem("isLogin")) {
+      setUserLogin(true);
+    }
+
     let init = async (name, userName) => {
       localStorage.getItem("isLogin") &&
         client.on("user-published", async (user, mediaType) => {
@@ -114,54 +119,67 @@ export default function VideoCall(props) {
   console.log("users-----------------------------------------", users);
 
   useEffect(() => {
-    const query = ref(db, "database__name");
-    return onValue(query, snapshot => {
-      const data = snapshot.val();
+    const dbRef = ref(db, "audiences");
 
-      if (snapshot.exists()) {
-        Object.values(data).map(auidience => {
-          setAuidiences(auidience => [...auidiences, auidience]);
-        });
-      }
+    onValue(dbRef, snapshort => {
+      let records = [];
+      console.log("snapshort", snapshort);
+      snapshort.forEach(childSnapshort => {
+        let keyName = childSnapshort.key;
+        let value = childSnapshort.val();
+        console.log(
+          "childSnapshort-----------------------------------",
+          childSnapshort
+        );
+        records.push({ key: keyName, value: value });
+        console.log("Records---------------", records);
+        setAuidiences(records);
+      });
     });
-  }, []);
+  }, [users.length]);
+
+  console.log("auidiences----------------", auidiences);
 
   return (
-    <Box
-      style={{
-        background: "#0000",
-        padding: "4px",
-      }}
-    >
-      <Grid
-        container
+    <>
+      {/* {userLogin && <Navigate to="/group-video-calling-app/signup" /> } */}
+      <Box
         style={{
           background: "#0000",
+          padding: "4px",
         }}
       >
-        <Grid item xs={12} style={{ height: "85vh" }}>
-          {start && tracks && (
-            <Video
-              tracks={tracks}
-              users={users}
-              fullName={fullName}
-              userName={userName}
-            />
-          )}
-        </Grid>
-        {/* <Toolbar /> */}
+        <Grid
+          container
+          style={{
+            background: "#0000",
+          }}
+        >
+          <Grid item xs={12} style={{ height: "85vh" }}>
+            {start && tracks && (
+              <Video
+                tracks={tracks}
+                users={users}
+                fullName={fullName}
+                userName={userName}
+                auidiences={auidiences}
+              />
+            )}
+          </Grid>
+          {/* <Toolbar /> */}
 
-        <Grid item xs={12}>
-          {ready && tracks && (
-            <Controls
-              tracks={tracks}
-              setStart={setStart}
-              setInCall={setInCall}
-              users={users}
-            />
-          )}
+          <Grid item xs={12}>
+            {ready && tracks && (
+              <Controls
+                tracks={tracks}
+                setStart={setStart}
+                setInCall={setInCall}
+                users={users}
+              />
+            )}
+          </Grid>
         </Grid>
-      </Grid>
-    </Box>
+      </Box>
+    </>
   );
 }

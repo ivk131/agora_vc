@@ -25,10 +25,10 @@ function Login() {
   const [isLogin, setIsLogin] = useState("");
 
   useEffect(() => {
-    if (localStorage.getItem("isLogin")) {
-      setIsLogin(true);
-    }
-  }, [isLogin]);
+    localStorage.getItem("isLogin") && (
+      <Navigate to="/group-video-calling-app" />
+    );
+  }, [localStorage.getItem("isLogin")]);
 
   const handleInputChange = e => {
     const { name, value } = e.target;
@@ -131,9 +131,15 @@ function Login() {
     });
   };
 
+  useEffect(
+    () => {},
+    // [localStorage.getItem("isLogin"), localStorage.getItem("agoraToken")],
+    [isLogin]
+  );
+
   return (
     <>
-      {isLogin && <Navigate to="/" />}
+      {isLogin && <Navigate to="/group-video-calling-app" />}
       <Container maxWidth="xs">
         <Box pt={8}>
           <Box className="" component={Paper} p={2}>
@@ -189,7 +195,7 @@ function Login() {
                 <Typography>
                   Don't have an account ?{" "}
                   <span>
-                    <Link to="/signup">Sign Up</Link>
+                    <Link to="/group-video-calling-app/signup">Sign Up</Link>
                   </span>
                 </Typography>
               </Box>

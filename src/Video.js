@@ -5,27 +5,34 @@ import { onValue, ref } from "firebase/database";
 import { db } from "./utils/firebase";
 
 export default function Video(props) {
-  const { users, tracks, fullName, userName } = props;
+  const { users, tracks, fullName, userName, auidiences } = props;
   const [gridSpacing, setGridSpacing] = useState(12);
-  const [userNamee, setUserName] = useState("");
+  const [auidienceName, setauidienceName] = useState("");
+
+  const filterByReference = (users, auidiences) => {
+    let res = [];
+    res = users.filter(el => {
+      return !auidiences.find(element => {
+        return element.Uid === el.uid;
+      });
+    });
+    return res;
+  };
+
+  const getUserName = () => {};
 
   useEffect(() => {
     // setGridSpacing(Math.max(Math.floor(12 / (users.length + 1)), 4));
     setGridSpacing(Math.max(Math.floor(12 / (users.length + 1))));
     console.log("gridSpacing", gridSpacing);
+
+    console.log("resresresresresres", filterByReference(users, auidiences));
   }, [users, tracks]);
 
-  useEffect(() => {
-    const dbRef = ref(db, "audiences");
-
-    onValue(dbRef, snapshort => {
-      console.log("snapshort", snapshort);
-      setUserName(snapshort.userName);
-    });
-  }, [userNamee]);
-
-  console.log("USERS---------------------------", users);
   const totalUsers = users?.length + 1;
+
+  console.log("users.................", users);
+
   return (
     <Grid
       container
@@ -91,7 +98,7 @@ export default function Video(props) {
               borderRadius: "4px",
             }}
           >
-            <Typography variant="body2"> {userName} </Typography>
+            <Typography variant="body2"> {userName ?? "Guest"} </Typography>
           </Box>
         </AgoraVideoPlayer>
       </Grid>
@@ -151,7 +158,7 @@ export default function Video(props) {
                       borderRadius: "4px",
                     }}
                   >
-                    <Typography variant="body2">{user.uid} </Typography>
+                    <Typography variant="body2">{user?.uid} </Typography>
                   </Box>
                 </AgoraVideoPlayer>
               </Grid>
