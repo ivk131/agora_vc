@@ -82,7 +82,7 @@ export default function Video(props) {
             display: "flex",
             justifyContent: "center",
             height: "100%",
-            width: "100%",
+            width: "90%",
             maxHeight: `${totalUsers} <= 2 ? 100%: 280px`,
             position: "relative",
           }}

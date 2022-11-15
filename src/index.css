@@ -49,6 +49,18 @@ code {
   right: "40%";
 }
 
+.MuiButtonBase-root,
+.MuiIconButton-root {
+  height: 40;
+  width: 40;
+}
+
+.admin__video__container {
+  display: flex;
+  justify-content: center;
+  /* max-width: 500px !important; */
+}
+
 @media only screen and (max-width: 390px) {
   .admin__video__container {
     max-height: 50vh !important;
@@ -61,6 +73,16 @@ code {
   }
 }
 
+@media only screen and (max-width: 400px) {
+  #localPlayerContainer {
+    width: 100%;
+  }
+}
+
 .MuiIconButton-label {
   color: #fff !important;
+}
+
+.MuiIconButton-root {
+  height: "75px";
 }

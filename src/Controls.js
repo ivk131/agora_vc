@@ -23,6 +23,7 @@ import { Link, Navigate } from "react-router-dom";
 import ScreenShareIcon from "@material-ui/icons/ScreenShare";
 import StopScreenShareIcon from "@material-ui/icons/StopScreenShare";
 import PanToolIcon from "@material-ui/icons/PanTool";
+import ChatIcon from "@material-ui/icons/Chat";
 import // createScreenVideoTrack,
 // ScreenVideoTrackInitConfig,
 // ILocalVideoTrack,
@@ -45,6 +46,7 @@ import AgoraRTC, {
   MicrophoneAudioTrackInitConfig,
   ScreenVideoTrackInitConfig,
 } from "agora-rtc-sdk-ng";
+import ChatModal from "./components/chat/ChatModal";
 
 const styles = makeStyles(theme => ({
   iconsContainer: {
@@ -61,6 +63,7 @@ export default function Controls(props) {
   const [open, setOpen] = useState(false);
   const [isSharingEnabled, setisSharingEnabled] = useState(false);
   const [isMuteAll, setisMuteAll] = useState(false);
+  const [openChat, setOpenOpenChat] = useState(false);
   const classes = styles();
 
   const handleClose = () => setOpen(true);
@@ -149,10 +152,14 @@ export default function Controls(props) {
     alert("Raise Hand ?");
   };
 
+  const handleOpenChatDialog = () => {
+    setOpenOpenChat(true);
+  };
+
   return (
     <Box
       style={{
-        // background: "#454545",
+        background: "#3c4043",
         borderRadius: "8px",
         display: "flex",
         justifyContent: "center",
@@ -161,6 +168,15 @@ export default function Controls(props) {
       p={2}
     >
       <Grid container alignItems="center" display="flex" justify="center">
+        <Box flexGrow={1} />
+        <Grid lg={2}>
+          <Box style={{ color: "#fff" }}>
+            <Typography variant="h6">
+              {localStorage.getItem("name")}{" "}
+            </Typography>
+          </Box>
+        </Grid>
+        <Box flexGrow={1} />
         <Grid item xs={4} sm={1} textAlign="center">
           <Box textAlign="center">
             <Tooltip
@@ -248,13 +264,22 @@ export default function Controls(props) {
             </Tooltip>
           </Box>
         </Grid>
-        {/* <Box pl={3} /> */}
+        <Box flexGrow={1} />
+
         <Grid item xs={4} sm={1}>
           <Box textAlign="center">
             <IconButton>
               <Badge badgeContent={users?.length + 1}>
                 <GroupsIcon />
               </Badge>
+            </IconButton>
+          </Box>
+        </Grid>
+
+        <Grid lg={2}>
+          <Box>
+            <IconButton onClick={handleOpenChatDialog}>
+              <ChatIcon />
             </IconButton>
           </Box>
         </Grid>
@@ -268,6 +293,11 @@ export default function Controls(props) {
         setOpen={setOpen}
         users={users}
       /> */}
+      <ChatModal
+        openChat={openChat}
+        setOpenOpenChat={setOpenOpenChat}
+        handleOpenChatDialog={handleOpenChatDialog}
+      />
     </Box>
   );
 }
