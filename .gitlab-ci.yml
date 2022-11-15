@@ -31,7 +31,7 @@ deploy:
      - build
    script:
      - aws --version
-     - aws s3 sync ./build s3://ipl_agora
+     - aws s3 sync ./build s3://ipl-agora
      - echo "deployed successfully"
    only:
     - main
