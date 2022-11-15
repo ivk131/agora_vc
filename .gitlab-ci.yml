@@ -1,0 +1,37 @@
+stages:
+  - build
+  - deploy
+
+build:
+  stage: build
+  tags:
+     - gitlab-runner    
+  script:
+      - mkdir -p dist
+      - npm install 
+      - CI= npm run build
+      - ls
+      - echo "Build Successfully"
+  artifacts:
+       paths:
+         # build folder
+         - build/
+       expire_in: 1 hour
+  only:
+  - main
+
+deploy:
+   stage: deploy
+   tags:
+     - gitlab-runner
+   image:
+     name: amazon/aws-cli
+     entrypoint: [""]
+   dependencies:
+     - build
+   script:
+     - aws --version
+     - aws s3 sync ./build s3://ipl-agora
+     - echo "deployed successfully"
+   only:
+    - main
