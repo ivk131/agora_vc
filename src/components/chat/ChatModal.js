@@ -6,13 +6,19 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
-import { Box, IconButton, TextField, Typography } from "@material-ui/core";
+import {
+  Box,
+  IconButton,
+  TextField,
+  Typography,
+  makeStyles,
+} from "@material-ui/core";
 import SendIcon from "@material-ui/icons/Send";
 import { v4 as uuidv4 } from "uuid";
 import { db } from "../../utils/firebase";
 import { onValue, ref } from "firebase/database";
 import moment from "moment";
-
+import CloseIcon from "@material-ui/icons/Close";
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -24,9 +30,24 @@ const initialValues = {
   image: "https://iplfarmersamvad.com/files/16633155061071663315503000.jpg",
   requestCode: 0,
   userID: "",
-  userName: localStorage.getItem("name"),
+  userName: "",
   date: null,
 };
+
+const styles = makeStyles(() => ({
+  modalContainer: {
+    display: "flex",
+    justifyContent: "right",
+    position: "absolute",
+    right: "8px",
+    // padding: " 8px",
+  },
+  header: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+}));
 
 export default function ChatModal({
   openChat,
@@ -36,21 +57,30 @@ export default function ChatModal({
   const [open, setOpen] = React.useState(false);
   const [comments, setComments] = useState([]);
   const [values, setValues] = useState(initialValues);
-  let records = [];
+  const classes = styles();
 
   useEffect(() => {
     const dbRef = ref(db, "comments");
-
     onValue(dbRef, snapshort => {
-      snapshort.forEach(childSnapshort => {
-        let keyName = childSnapshort.key;
-        let value = childSnapshort.val();
-        records.push({ key: keyName, value: value });
-        console.log("Records---------------", records);
-        setComments(records);
-      });
+      setComments([]);
+
+      const data = snapshort.val();
+
+      if (data !== null) {
+        Object.values(data).map(item => {
+          setComments(oldCommentArray => [...oldCommentArray, item]);
+        });
+      }
+
+      // snapshort.forEach(childSnapshort => {
+      //   let keyName = childSnapshort.key;
+      //   let value = childSnapshort.val();
+      //   comments.push({ key: keyName, value: value });
+      // });
     });
   }, []);
+
+  console.log("comments==================================", comments);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -91,8 +121,8 @@ export default function ChatModal({
           comment,
           image,
           requestCode,
-          userID,
-          userName,
+          userID: localStorage.getItem("response_userId"),
+          userName: localStorage.getItem("name"),
           date: new Date(),
         }),
       }
@@ -127,39 +157,61 @@ export default function ChatModal({
         onClose={handleOpenChatDialog}
         aria-labelledby="alert-dialog-slide-title"
         aria-describedby="alert-dialog-slide-description"
-        style={{
-          display: "flex",
-          justifyContent: "right",
-          position: "absolute",
-          right: "8px",
-        }}
+        className={classes.modalContainer}
       >
         <DialogContent>
-          <form onSubmit={handleSunmit}>
-            <Box style={{ height: "340px" }}>
-              <Box style={{ maxHeight: "280px" }}>
-                {comments.map(comment => (
+          <Box style={{ height: "340px" }}>
+            <Box className={classes.header}>
+              <Typography> In-call messages</Typography>
+              <IconButton onClick={handleClose}>
+                <CloseIcon color="primary" />
+              </IconButton>
+            </Box>
+
+            <Box
+              style={{
+                maxHeight: "280px",
+                overflow: "auto",
+                maxWidth: "320px",
+                paddingRight: "8px",
+              }}
+            >
+              {comments.map(comment => (
+                <Box
+                  key={comment.key}
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    padding: "2px 0",
+                    flexDirection: "column",
+                  }}
+                >
                   <Box
-                    key={comment.key}
                     style={{
                       display: "flex",
-                      justifyContent: "space-between",
-                      padding: "2px 0",
+                      justifyContent: "flex-start",
+                      alignItems: "center",
                     }}
                   >
-                    <Typography variant="subtitle">
-                      {comment?.value?.userName} {"  "}
+                    <Typography variant="subtitle1">
+                      {comment?.userName}
                     </Typography>
-                    <Typography color="textSecondary">
-                      {comment?.value?.comment} {"  "}
-                    </Typography>
-                    <Typography variant="body1">
-                      {new Date(comment?.value?.date).getMinutes()}
+                    <Typography variant="body2" style={{ marginLeft: "32px" }}>
+                      {moment(comment?.date).format("h:mm:ss a")}
+                      {/* {new Date(comment?.value?.date).getMinutes()} */}
                     </Typography>
                   </Box>
-                ))}
-              </Box>
+                  <Box>
+                    <Typography color="textSecondary">
+                      {comment?.comment} {"  "}
+                    </Typography>
+                  </Box>
+                </Box>
+              ))}
             </Box>
+          </Box>
+
+          <form onSubmit={handleSunmit}>
             <Box
               style={{
                 display: "flex",
@@ -167,23 +219,30 @@ export default function ChatModal({
                 alignItems: "center",
               }}
             >
-              <TextField
-                onChange={handleInputChange}
-                variant="outlined"
-                placeholder="Enter something..."
-                name="comment"
-                value={values.comment}
-              />
+              <Box style={{ display: "flex", position: "relative" }}>
+                <TextField
+                  fullWidth
+                  onChange={handleInputChange}
+                  variant="outlined"
+                  placeholder="Send a message to everyone"
+                  name="comment"
+                  value={values.comment}
+                  size="small"
+                />
 
-              <IconButton
-                type="submit"
-                disabled={values.comment.length !== 0 ? false : true}
-                style={{ marginLeft: "8px" }}
-                onClick={handleClose}
-                color="primary"
-              >
-                <SendIcon color={values.comment && "primary"} />
-              </IconButton>
+                <IconButton
+                  style={{ position: "absolute", right: "8px" }}
+                  type="submit"
+                  disabled={values.comment.length !== 0 ? false : true}
+                  // onClick={handleClose}
+                  color="primary"
+                >
+                  <SendIcon
+                    fontSize="small"
+                    color={values.comment && "primary"}
+                  />
+                </IconButton>
+              </Box>
             </Box>
           </form>
         </DialogContent>

@@ -1,8 +1,6 @@
 import { AgoraVideoPlayer } from "agora-rtc-react";
 import { Grid, Box, Card, Typography } from "@material-ui/core";
 import { useState, useEffect } from "react";
-import { onValue, ref } from "firebase/database";
-import { db } from "./utils/firebase";
 
 export default function Video(props) {
   const { users, tracks, fullName, userName, auidiences } = props;
@@ -91,7 +89,7 @@ export default function Video(props) {
             style={{
               position: "absolute",
               bottom: "1%",
-              right: "1%",
+              left: "1%",
               zIndex: 1,
               background: "#F2F4F6",
               padding: "2px 8px",
@@ -151,7 +149,7 @@ export default function Video(props) {
                     style={{
                       position: "absolute",
                       bottom: "1%",
-                      right: "1%",
+                      left: "1%",
                       zIndex: 1,
                       background: "#fafafa",
                       padding: "2px 8px",

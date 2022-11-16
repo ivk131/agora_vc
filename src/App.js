@@ -1,15 +1,11 @@
 import { useState, useEffect } from "react";
-import { Button } from "@material-ui/core";
 import VideoCall from "./VideoCall";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { Container, Box, Typography } from "@material-ui/core";
 import SignUp from "./components/SignUp";
 import Login from "./components/Login";
 import WelcomeScreen from "./components/WelcomeScreen";
-import axios from "axios";
 import { db } from "../src/utils/firebase";
 import { onValue, ref } from "firebase/database";
-import Header from "./components/header/Header";
 
 function App() {
   const [inCall, setInCall] = useState(true);
@@ -55,5 +51,3 @@ function App() {
 }
 
 export default App;
-
-// /group-video-calling-app

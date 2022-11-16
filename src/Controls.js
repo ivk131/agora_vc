@@ -2,11 +2,9 @@ import { useEffect, useState } from "react";
 import { useClient } from "./settings";
 import {
   Grid,
-  Button,
   Box,
   IconButton,
   Tooltip,
-  Divider,
   Badge,
   makeStyles,
   Typography,
@@ -15,37 +13,14 @@ import MicIcon from "@material-ui/icons/Mic";
 import MicOffIcon from "@material-ui/icons/MicOff";
 import VideocamIcon from "@material-ui/icons/Videocam";
 import VideocamOffIcon from "@material-ui/icons/VideocamOff";
-import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import GroupsIcon from "@material-ui/icons/GroupSharp";
 import CallEndIcon from "@material-ui/icons/CallEnd";
-import DialogModal from "./components/DialogModal";
-import { Link, Navigate } from "react-router-dom";
 import ScreenShareIcon from "@material-ui/icons/ScreenShare";
 import StopScreenShareIcon from "@material-ui/icons/StopScreenShare";
 import PanToolIcon from "@material-ui/icons/PanTool";
 import ChatIcon from "@material-ui/icons/Chat";
-import // createScreenVideoTrack,
-// ScreenVideoTrackInitConfig,
-// ILocalVideoTrack,
-// ILocalAudioTrack,
-"agora-rtc-react";
 
-import AgoraRTC, {
-  BufferSourceAudioTrackInitConfig,
-  CameraVideoTrackInitConfig,
-  ClientConfig,
-  CustomAudioTrackInitConfig,
-  CustomVideoTrackInitConfig,
-  IAgoraRTCClient,
-  IBufferSourceAudioTrack,
-  ICameraVideoTrack,
-  ILocalAudioTrack,
-  ILocalVideoTrack,
-  IMicrophoneAudioTrack,
-  IRemoteVideoTrack,
-  MicrophoneAudioTrackInitConfig,
-  ScreenVideoTrackInitConfig,
-} from "agora-rtc-sdk-ng";
+import AgoraRTC from "agora-rtc-sdk-ng";
 import ChatModal from "./components/chat/ChatModal";
 
 const styles = makeStyles(theme => ({
@@ -163,6 +138,7 @@ export default function Controls(props) {
         borderRadius: "8px",
         display: "flex",
         justifyContent: "center",
+        backgroundColor: "#3c4043",
       }}
       justifyContent="center"
       p={2}

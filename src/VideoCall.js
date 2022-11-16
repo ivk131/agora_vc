@@ -8,9 +8,6 @@ import {
 import { Grid, Toolbar, Box } from "@material-ui/core";
 import Video from "./Video";
 import Controls from "./Controls";
-import SignUp from "./components/SignUp.js";
-import { Link, Navigate } from "react-router-dom";
-import axios from "axios";
 
 // Connect with firebase
 import { db } from "./utils/firebase";

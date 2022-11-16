@@ -10,7 +10,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background: #3c4043;
   /* height: 100vh; */
-  border: "1px solid red";
 }
 
 code {
@@ -20,7 +19,8 @@ code {
 
 .app {
   height: 100vh;
-  background: rgba(31, 30, 30, 0);
+  /* background: rgba(31, 30, 30, 0); */
+  background: #3c4043;
 }
 
 .agora_video_player {
