@@ -21,9 +21,6 @@ import PanToolIcon from "@material-ui/icons/PanTool";
 import ChatIcon from "@material-ui/icons/Chat";
 import { db } from "./utils/firebase";
 
-// import InterpreterModeIcon from "@material-ui/icons/InterpreterMode";
-// import MicExternalOffIcon from "@material-ui/icons/MicExternalOff";
-
 import AgoraRTC from "agora-rtc-sdk-ng";
 import ChatModal from "./components/chat/ChatModal";
 import { ref, update } from "firebase/database";
@@ -165,11 +162,11 @@ export default function Controls(props) {
         backgroundColor: "#3c4043",
       }}
       justifyContent="center"
-      p={2}
+      p={1}
     >
       <Grid container alignItems="center" display="flex" justify="center">
-        <Box flexGrow={1} />
-        <Grid lg={2}>
+        <Box flexGrow={0.5} />
+        <Grid item xs={3} sm={2}>
           <Box style={{ color: "#fff" }}>
             <Typography variant="h6">
               {localStorage.getItem("name")}{" "}
@@ -177,7 +174,7 @@ export default function Controls(props) {
           </Box>
         </Grid>
         <Box flexGrow={1} />
-        <Grid item xs={4} sm={1} textAlign="center">
+        <Grid item xs={3} sm={1} textAlign="center">
           <Box textAlign="center">
             <Tooltip
               arrow
@@ -196,21 +193,7 @@ export default function Controls(props) {
           </Box>
         </Grid>
 
-        <Grid item xs={4} sm={1} textAlign="center">
-          <Box textAlign="center">
-            <Tooltip arrow title={trackState.audio ? "Mute All" : "Unmute"}>
-              <IconButton
-                variant="contained"
-                color={trackState.audio ? "primary" : ""}
-                onClick={() => muteAllAudiences("audio")}
-              >
-                {trackState.audio ? <MicIcon /> : <MicOffIcon />}
-              </IconButton>
-            </Tooltip>
-          </Box>
-        </Grid>
-
-        <Grid item xs={4} sm={1} textAlign="center">
+        <Grid item xs={3} sm={1} textAlign="center">
           <Box textAlign="center">
             <Tooltip
               arrow
@@ -227,7 +210,7 @@ export default function Controls(props) {
           </Box>
         </Grid>
 
-        <Grid item xs={4} sm={1} textAlign="center">
+        <Grid item xs={3} sm={1} textAlign="center">
           <Box textAlign="center">
             <Tooltip arrow title={!isSharingEnabled ? "Present Now" : "Stop"}>
               <IconButton
@@ -245,7 +228,7 @@ export default function Controls(props) {
           </Box>
         </Grid>
 
-        <Grid item xs={4} sm={1}>
+        <Grid item xs={3} sm={1}>
           <Box textAlign="center">
             <Tooltip title="Raise Hand" arrow>
               <IconButton
@@ -259,13 +242,13 @@ export default function Controls(props) {
           </Box>
         </Grid>
 
-        <Grid item xs={4} sm={1}>
+        <Grid item xs={3} sm={1}>
           <Box textAlign="center">
             <Tooltip title=" Hang call" arrow>
               <IconButton
                 variant="outlined"
                 color="secondary"
-                style={{ color: "red", background: "red" }}
+                style={{ color: "red", background: "#fff" }}
                 onClick={() => {
                   leaveChannel();
                   alert("Are you sure, You want to end this merting?");
@@ -273,14 +256,28 @@ export default function Controls(props) {
                   window.location.href = "/welcome";
                 }}
               >
-                <CallEndIcon />
+                <CallEndIcon fontSize="small" color="secondary" />
               </IconButton>
             </Tooltip>
           </Box>
         </Grid>
         <Box flexGrow={1} />
 
-        <Grid item xs={4} sm={1}>
+        <Grid item xs={3} sm={1}>
+          <Box textAlign="right">
+            <Tooltip arrow title={trackState.audio ? "Mute All" : "Unmute"}>
+              <IconButton
+                variant="contained"
+                color={trackState.audio ? "primary" : ""}
+                onClick={() => muteAllAudiences("audio")}
+              >
+                {trackState.audio ? <MicIcon /> : <MicOffIcon />}
+              </IconButton>
+            </Tooltip>
+          </Box>
+        </Grid>
+
+        <Grid item xs={3} sm={1}>
           <Box textAlign="center">
             <IconButton>
               <Badge badgeContent={users?.length + 1}>
@@ -290,7 +287,7 @@ export default function Controls(props) {
           </Box>
         </Grid>
 
-        <Grid lg={2}>
+        <Grid item xs={3} sm={1}>
           <Box>
             <IconButton onClick={handleOpenChatDialog}>
               <ChatIcon />

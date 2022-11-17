@@ -61,25 +61,16 @@ export default function VideoCall(props) {
     }
 
     let init = async (name, userName) => {
-      console.log("remote user!!! -- 1");
-      client.on("stream-subscribed", async evt => {
-        var stream = await evt.stream;
-        // Mutes the remote stream.
-        stream.muteAudio();
-        console.log("stream-subscribed--------------------------", stream);
-      });
-
-      console.log("remote user!!! -- 2");
-
       client.on("user-published", async (user, mediaType) => {
         await client.subscribe(user, mediaType);
         if (mediaType === "video") {
           setUsers(prevUsers => {
             return [...prevUsers, user];
           });
+          console.log("users_____________________", users);
         }
         if (mediaType === "audio") {
-          user.audioTrack.stop();
+          user.audioTrack.play();
         }
       });
 
@@ -106,7 +97,6 @@ export default function VideoCall(props) {
         console.log("error", error);
       }
 
-      console.log("client--------------------------------", client.publish);
       if (tracks)
         await client
           .publish([tracks[0], tracks[1]])
@@ -155,7 +145,7 @@ export default function VideoCall(props) {
             background: "#0000",
           }}
         >
-          <Grid item xs={12} style={{ height: "85vh" }}>
+          <Grid item xs={12} style={{ height: "87vh" }}>
             {start && tracks && (
               <Video
                 tracks={tracks}
@@ -175,6 +165,7 @@ export default function VideoCall(props) {
                 setStart={setStart}
                 setInCall={setInCall}
                 users={users}
+                auidiences={auidiences}
               />
             )}
           </Grid>

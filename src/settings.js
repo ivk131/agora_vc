@@ -1,8 +1,12 @@
 import { createClient, createMicrophoneAndCameraTracks } from "agora-rtc-react";
 
-const appId = localStorage.getItem("appId");
-const token = localStorage.getItem("agoraToken");
-export const channelName = localStorage.getItem("channelName");
+const appId =
+  "002d67ae068040be96b28ec17b115ea8" || localStorage.getItem("appId");
+const token =
+  "007eJxTYHh9dNPPCsXkm9ouJ6I2qe13jmJfOflvQVVTf/xBtoTAtHYFBgMDoxQz88RUAzMLAxODpFRLsyQji9RkQ/MkQ0PT1ESLsIay5IZARgZ2rb2MjAwQCOKLM5RlpqTmx8cn5+elFaXmJWfmpcfHJxYUMDAAAPyNJnY" ||
+  localStorage.getItem("agoraToken");
+export const channelName =
+  "video__confrencing__app" || localStorage.getItem("channelName");
 
 export const config = { mode: "rtc", codec: "vp8", appId: appId, token: token };
 export const useClient = createClient(config);

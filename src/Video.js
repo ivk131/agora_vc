@@ -28,8 +28,6 @@ export default function Video(props) {
     return res;
   };
 
-  const getUserName = () => {};
-
   useEffect(() => {
     // setGridSpacing(Math.max(Math.floor(12 / (users.length + 1)), 4));
     setGridSpacing(Math.max(Math.floor(12 / (users.length + 1))));
@@ -39,8 +37,6 @@ export default function Video(props) {
   }, [users, tracks]);
 
   const totalUsers = users?.length + 1;
-
-  console.log("users.................", users);
 
   const remoteMute = async type => {
     if (type === "audio") {
@@ -70,8 +66,6 @@ export default function Video(props) {
       container
       style={{
         height: "100%",
-        paddingLeft: "24px",
-        paddingRight: "24px",
         background: "#454545",
         width: "100%",
       }}
@@ -80,10 +74,9 @@ export default function Video(props) {
       <Grid
         item
         className="admin__video__container"
-        style={{ height: "380px", width: "80%" }}
+        style={{ height: "392px", width: "70%" }}
         sm={12}
         xs={12}
-        // lg={gridSpacing}
       >
         <AgoraVideoPlayer
           videoTrack={tracks[1]}
@@ -91,8 +84,9 @@ export default function Video(props) {
           style={{
             display: "flex",
             justifyContent: "center",
-            padding: "0 10%",
+            padding: "0 15%",
             height: "100%",
+            background: "#000",
             width: "100%",
             maxHeight: `${totalUsers} <= 2 ? 100%: 280px`,
             position: "relative",
@@ -101,10 +95,10 @@ export default function Video(props) {
           <Box
             style={{
               position: "absolute",
-              bottom: "1%",
-              left: "10.2%",
+              bottom: "2%",
+              left: "15.2%",
               zIndex: 1,
-              background: "#F2F4F6",
+              background: "#f2f4f6",
               padding: "2px 8px",
               borderRadius: "4px",
             }}
@@ -121,11 +115,13 @@ export default function Video(props) {
                 item
                 className="admin__video__container2"
                 style={{
-                  height: "145px",
+                  height: "142px",
                   display: "flex",
+                  justifyContent: "center",
                   overflow: "auto",
                 }}
-                xs={2}
+                xs={4}
+                sm={2}
               >
                 <AgoraVideoPlayer
                   videoTrack={user.videoTrack}
@@ -134,7 +130,8 @@ export default function Video(props) {
                     position: "relative",
                     height: "100%",
                     width: "100%",
-                    maxHeight: `${totalUsers} <= 2 ? 100%: 280px`,
+                    background: "#fff",
+                    // maxHeight: `${totalUsers} <= 2 ? 100%: 280px`,
                   }}
                 >
                   <Box
@@ -143,7 +140,7 @@ export default function Video(props) {
                       bottom: "1%",
                       left: "1%",
                       zIndex: 1,
-                      background: "#fafafa",
+                      background: "#fff",
                       padding: "2px 8px",
                       borderRadius: "4px",
                     }}
@@ -162,7 +159,7 @@ export default function Video(props) {
                     }}
                   >
                     <IconButton onClick={() => remoteMute("audio")}>
-                      <MicIcon fontSize="small" />
+                      <MicIcon color="primary" fontSize="small" />
                     </IconButton>
                   </Box>
                 </AgoraVideoPlayer>
