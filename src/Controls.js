@@ -19,11 +19,14 @@ import ScreenShareIcon from "@material-ui/icons/ScreenShare";
 import StopScreenShareIcon from "@material-ui/icons/StopScreenShare";
 import PanToolIcon from "@material-ui/icons/PanTool";
 import ChatIcon from "@material-ui/icons/Chat";
+import { db } from "./utils/firebase";
+
 // import InterpreterModeIcon from "@material-ui/icons/InterpreterMode";
 // import MicExternalOffIcon from "@material-ui/icons/MicExternalOff";
 
 import AgoraRTC from "agora-rtc-sdk-ng";
 import ChatModal from "./components/chat/ChatModal";
+import { ref, update } from "firebase/database";
 
 const styles = makeStyles(theme => ({
   iconsContainer: {
@@ -35,7 +38,7 @@ const styles = makeStyles(theme => ({
 
 export default function Controls(props) {
   const client = useClient();
-  const { tracks, setStart, setInCall, users } = props;
+  const { tracks, setStart, setInCall, users, auidiences } = props;
   const [trackState, setTrackState] = useState({ video: true, audio: true });
   const [open, setOpen] = useState(false);
   const [isSharingEnabled, setisSharingEnabled] = useState(false);
@@ -68,25 +71,22 @@ export default function Controls(props) {
     }
   };
 
-  const remoteMute = async type => {
-    if (type === "audio") {
-      await tracks[0].setEnabled(!trackState.audio);
-      setTrackState(ps => {
-        return { ...ps, audio: !ps.audio };
+  const handleUpdateAudience = () => {
+    auidiences.map(auidience => {
+      update(ref(db, `audiences/${auidience.uid}`), {
+        ...auidience,
+        requestCode: 2,
       });
+    });
+    alert("alert update called");
+  };
 
-      client.on("stream-subscribed", function (evt) {
-        var stream = evt.stream;
-        // Mutes the remote stream.
-        stream.muteAudio();
-        console.log("stream-subscribed--------------------------", stream);
-      });
-    } else if (type === "video") {
-      await tracks[1].setEnabled(!trackState.video);
-      setTrackState(ps => {
-        return { ...ps, video: !ps.video };
-      });
-    }
+  const muteAllAudiences = async type => {
+    // alert("Mute all!!! click");
+    handleUpdateAudience();
+    // Object.values(auidiences).map(auidience => {
+    //   console.log("auidience", auidience?.value?.Uid);
+    // });
   };
 
   const leaveChannel = async () => {
@@ -198,16 +198,11 @@ export default function Controls(props) {
 
         <Grid item xs={4} sm={1} textAlign="center">
           <Box textAlign="center">
-            <Tooltip
-              arrow
-              title={
-                trackState.audio ? "mute remote user" : "unmute remote user"
-              }
-            >
+            <Tooltip arrow title={trackState.audio ? "Mute All" : "Unmute"}>
               <IconButton
                 variant="contained"
                 color={trackState.audio ? "primary" : ""}
-                onClick={() => remoteMute("audio")}
+                onClick={() => muteAllAudiences("audio")}
               >
                 {trackState.audio ? <MicIcon /> : <MicOffIcon />}
               </IconButton>
