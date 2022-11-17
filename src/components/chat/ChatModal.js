@@ -53,6 +53,7 @@ export default function ChatModal({
   openChat,
   setOpenOpenChat,
   handleOpenChatDialog,
+  users,
 }) {
   const [open, setOpen] = React.useState(false);
   const [comments, setComments] = useState([]);
@@ -79,8 +80,6 @@ export default function ChatModal({
       // });
     });
   }, []);
-
-  console.log("comments==================================", comments);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -139,14 +138,11 @@ export default function ChatModal({
         userName: "",
         date: null,
       });
-      console.log("Comment stored Data Stored", res);
+      // console.log("Comment stored Data Stored", res);
     } else {
       alert("Something went worng!!!");
     }
   };
-
-  //   console.log("comment", values);
-  console.log("comments--------------------------------", comments);
 
   return (
     <div>
@@ -160,17 +156,17 @@ export default function ChatModal({
         className={classes.modalContainer}
       >
         <DialogContent>
-          <Box style={{ height: "340px" }}>
+          <Box style={{ height: "420px" }}>
             <Box className={classes.header}>
-              <Typography> In-call messages</Typography>
+              <Typography variant="h6"> In-call messages</Typography>
               <IconButton onClick={handleClose}>
-                <CloseIcon color="primary" />
+                <CloseIcon fontSize="small" color="primary" />
               </IconButton>
             </Box>
 
             <Box
               style={{
-                maxHeight: "280px",
+                maxHeight: "360px",
                 overflow: "auto",
                 maxWidth: "320px",
                 paddingRight: "8px",

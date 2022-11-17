@@ -1,11 +1,22 @@
 import { AgoraVideoPlayer } from "agora-rtc-react";
-import { Grid, Box, Card, Typography } from "@material-ui/core";
+import { Grid, Box, Card, Typography, IconButton } from "@material-ui/core";
 import { useState, useEffect } from "react";
+import MicIcon from "@material-ui/icons/Mic";
+import MicOffIcon from "@material-ui/icons/MicOff";
+import {
+  config,
+  useClient,
+  useMicrophoneAndCameraTracks,
+  channelName,
+} from "./settings.js";
 
 export default function Video(props) {
   const { users, tracks, fullName, userName, auidiences } = props;
   const [gridSpacing, setGridSpacing] = useState(12);
   const [auidienceName, setauidienceName] = useState("");
+  const [trackState, setTrackState] = useState({ video: true, audio: true });
+
+  const client = useClient();
 
   const filterByReference = (users, auidiences) => {
     let res = [];
@@ -31,6 +42,29 @@ export default function Video(props) {
 
   console.log("users.................", users);
 
+  const remoteMute = async type => {
+    if (type === "audio") {
+      await tracks[0].setEnabled(!trackState.audio);
+      setTrackState(ps => {
+        return { ...ps, audio: !ps.audio };
+      });
+      alert("mute remote-1");
+      client.on("stream-subscribed", function (evt) {
+        var stream = evt.stream;
+        alert("mute remote-2");
+        // Mutes the remote stream.
+        stream.muteAudio();
+        console.log("stream-subscribed--------------------------", stream);
+      });
+      alert("mute remote-3");
+    } else if (type === "video") {
+      await tracks[1].setEnabled(!trackState.video);
+      setTrackState(ps => {
+        return { ...ps, video: !ps.video };
+      });
+    }
+  };
+
   return (
     <Grid
       container
@@ -39,38 +73,16 @@ export default function Video(props) {
         paddingLeft: "24px",
         paddingRight: "24px",
         background: "#454545",
+        width: "100%",
       }}
       spacing={1}
     >
       <Grid
         item
         className="admin__video__container"
-        sm={
-          totalUsers === 1
-            ? 12
-            : null || totalUsers === 2
-            ? 6
-            : null || totalUsers === 3
-            ? 4
-            : null || totalUsers === 4
-            ? 6
-            : null || totalUsers > 4
-            ? 3
-            : null
-        }
-        xs={
-          totalUsers === 1
-            ? 12
-            : null || totalUsers === 2
-            ? 6
-            : null || totalUsers === 3
-            ? 6
-            : null || totalUsers === 4
-            ? 6
-            : null || totalUsers > 4
-            ? 6
-            : null
-        }
+        style={{ height: "380px", width: "80%" }}
+        sm={12}
+        xs={12}
         // lg={gridSpacing}
       >
         <AgoraVideoPlayer
@@ -79,8 +91,9 @@ export default function Video(props) {
           style={{
             display: "flex",
             justifyContent: "center",
+            padding: "0 10%",
             height: "100%",
-            width: "90%",
+            width: "100%",
             maxHeight: `${totalUsers} <= 2 ? 100%: 280px`,
             position: "relative",
           }}
@@ -89,7 +102,7 @@ export default function Video(props) {
             style={{
               position: "absolute",
               bottom: "1%",
-              left: "1%",
+              left: "10.2%",
               zIndex: 1,
               background: "#F2F4F6",
               padding: "2px 8px",
@@ -107,33 +120,12 @@ export default function Video(props) {
               <Grid
                 item
                 className="admin__video__container2"
-                sm={
-                  totalUsers === 1
-                    ? 12
-                    : null || totalUsers === 2
-                    ? 6
-                    : null || totalUsers === 3
-                    ? 4
-                    : null || totalUsers === 4
-                    ? 6
-                    : null || totalUsers > 4
-                    ? 3
-                    : null
-                }
-                xs={
-                  totalUsers === 1
-                    ? 12
-                    : null || totalUsers === 2
-                    ? 6
-                    : null || totalUsers === 3
-                    ? 6
-                    : null || totalUsers === 4
-                    ? 6
-                    : null || totalUsers > 4
-                    ? 6
-                    : null
-                }
-                style={{ minHeight: "230px", borderRadius: "16px" }}
+                style={{
+                  height: "145px",
+                  display: "flex",
+                  overflow: "auto",
+                }}
+                xs={2}
               >
                 <AgoraVideoPlayer
                   videoTrack={user.videoTrack}
@@ -158,6 +150,21 @@ export default function Video(props) {
                   >
                     <Typography variant="body2">{user?.uid} </Typography>
                   </Box>
+                  <Box
+                    style={{
+                      position: "absolute",
+                      // bottom: "1%",
+                      top: "1%",
+                      right: "1%",
+                      zIndex: 1,
+                      padding: "2px 8px",
+                      borderRadius: "4px",
+                    }}
+                  >
+                    <IconButton onClick={() => remoteMute("audio")}>
+                      <MicIcon fontSize="small" />
+                    </IconButton>
+                  </Box>
                 </AgoraVideoPlayer>
               </Grid>
             );
@@ -166,3 +173,15 @@ export default function Video(props) {
     </Grid>
   );
 }
+
+// totalUsers === 1
+// ? 12
+// : null || totalUsers === 2
+// ? 6
+// : null || totalUsers === 3
+// ? 4
+// : null || totalUsers === 4
+// ? 6
+// : null || totalUsers > 4
+// ? 3
+// : null

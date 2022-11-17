@@ -21,12 +21,11 @@ export default function VideoCall(props) {
   const [userName, setUserName] = useState("");
   const [auidiences, setAuidiences] = useState([]);
   const [userLogin, setUserLogin] = useState(false);
-  // const [isLogin, setIsLogin] = useState(false);
 
   const client = useClient();
   const { ready, tracks } = useMicrophoneAndCameraTracks();
 
-  const Push = async user => {
+  const Push = async () => {
     const res = await fetch(
       "https://agora-vc-default-rtdb.firebaseio.com/audiences.json",
       {
@@ -36,10 +35,11 @@ export default function VideoCall(props) {
         },
         body: JSON.stringify({
           State: 1,
-          Uid: user.uid,
+          Uid: localStorage.getItem("Uid"),
           image: "https://iplfarmersamvad.com/files/1665566846049null.jpg",
           userID: localStorage.getItem("response_userId"),
           userName: localStorage.getItem("name"),
+          requestCode: 1,
         }),
       }
     );
@@ -52,24 +52,36 @@ export default function VideoCall(props) {
   };
 
   useEffect(() => {
+    Push();
+  }, []);
+
+  useEffect(() => {
     if (localStorage.getItem("isLogin")) {
       setUserLogin(true);
     }
 
     let init = async (name, userName) => {
-      localStorage.getItem("isLogin") &&
-        client.on("user-published", async (user, mediaType) => {
-          await client.subscribe(user, mediaType);
-          if (mediaType === "video") {
-            Push(user);
-            setUsers(prevUsers => {
-              return [...prevUsers, user];
-            });
-          }
-          if (mediaType === "audio") {
-            user.audioTrack.play();
-          }
-        });
+      console.log("remote user!!! -- 1");
+      client.on("stream-subscribed", async evt => {
+        var stream = await evt.stream;
+        // Mutes the remote stream.
+        stream.muteAudio();
+        console.log("stream-subscribed--------------------------", stream);
+      });
+
+      console.log("remote user!!! -- 2");
+
+      client.on("user-published", async (user, mediaType) => {
+        await client.subscribe(user, mediaType);
+        if (mediaType === "video") {
+          setUsers(prevUsers => {
+            return [...prevUsers, user];
+          });
+        }
+        if (mediaType === "audio") {
+          user.audioTrack.stop();
+        }
+      });
 
       client.on("user-unpublished", (user, mediaType) => {
         if (mediaType === "audio") {
@@ -91,7 +103,7 @@ export default function VideoCall(props) {
       try {
         await client.join(config.appId, name, config.token, 0);
       } catch (error) {
-        console.log("error");
+        console.log("error", error);
       }
 
       console.log("client--------------------------------", client.publish);
@@ -113,8 +125,6 @@ export default function VideoCall(props) {
     setUserName(localStorage.getItem("name"));
   }, [channelName, client, ready, tracks]);
 
-  console.log("users-----------------------------------------", users);
-
   useEffect(() => {
     const dbRef = ref(db, "audiences");
 
@@ -124,18 +134,11 @@ export default function VideoCall(props) {
       snapshort.forEach(childSnapshort => {
         let keyName = childSnapshort.key;
         let value = childSnapshort.val();
-        console.log(
-          "childSnapshort-----------------------------------",
-          childSnapshort
-        );
         records.push({ key: keyName, value: value });
-        console.log("Records---------------", records);
         setAuidiences(records);
       });
     });
   }, [users.length]);
-
-  console.log("auidiences----------------", auidiences);
 
   return (
     <>

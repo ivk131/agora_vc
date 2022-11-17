@@ -19,6 +19,8 @@ import ScreenShareIcon from "@material-ui/icons/ScreenShare";
 import StopScreenShareIcon from "@material-ui/icons/StopScreenShare";
 import PanToolIcon from "@material-ui/icons/PanTool";
 import ChatIcon from "@material-ui/icons/Chat";
+// import InterpreterModeIcon from "@material-ui/icons/InterpreterMode";
+// import MicExternalOffIcon from "@material-ui/icons/MicExternalOff";
 
 import AgoraRTC from "agora-rtc-sdk-ng";
 import ChatModal from "./components/chat/ChatModal";
@@ -57,6 +59,27 @@ export default function Controls(props) {
       await tracks[0].setEnabled(!trackState.audio);
       setTrackState(ps => {
         return { ...ps, audio: !ps.audio };
+      });
+    } else if (type === "video") {
+      await tracks[1].setEnabled(!trackState.video);
+      setTrackState(ps => {
+        return { ...ps, video: !ps.video };
+      });
+    }
+  };
+
+  const remoteMute = async type => {
+    if (type === "audio") {
+      await tracks[0].setEnabled(!trackState.audio);
+      setTrackState(ps => {
+        return { ...ps, audio: !ps.audio };
+      });
+
+      client.on("stream-subscribed", function (evt) {
+        var stream = evt.stream;
+        // Mutes the remote stream.
+        stream.muteAudio();
+        console.log("stream-subscribed--------------------------", stream);
       });
     } else if (type === "video") {
       await tracks[1].setEnabled(!trackState.video);
@@ -129,6 +152,7 @@ export default function Controls(props) {
 
   const handleOpenChatDialog = () => {
     setOpenOpenChat(true);
+    localStorage.setItem("isModalOpen", true);
   };
 
   return (
@@ -165,6 +189,25 @@ export default function Controls(props) {
                 variant="contained"
                 color={trackState.audio ? "primary" : ""}
                 onClick={() => mute("audio")}
+              >
+                {trackState.audio ? <MicIcon /> : <MicOffIcon />}
+              </IconButton>
+            </Tooltip>
+          </Box>
+        </Grid>
+
+        <Grid item xs={4} sm={1} textAlign="center">
+          <Box textAlign="center">
+            <Tooltip
+              arrow
+              title={
+                trackState.audio ? "mute remote user" : "unmute remote user"
+              }
+            >
+              <IconButton
+                variant="contained"
+                color={trackState.audio ? "primary" : ""}
+                onClick={() => remoteMute("audio")}
               >
                 {trackState.audio ? <MicIcon /> : <MicOffIcon />}
               </IconButton>
@@ -260,19 +303,12 @@ export default function Controls(props) {
           </Box>
         </Grid>
       </Grid>
-      {/* <Divider orientation="vertical" variant="middle" flexItem /> */}
 
-      {/* 
-      <DialogModal
-        onClose={handleClose}
-        open={open}
-        setOpen={setOpen}
-        users={users}
-      /> */}
       <ChatModal
         openChat={openChat}
         setOpenOpenChat={setOpenOpenChat}
         handleOpenChatDialog={handleOpenChatDialog}
+        users={users}
       />
     </Box>
   );

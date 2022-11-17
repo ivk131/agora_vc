@@ -24,23 +24,8 @@ code {
 }
 
 .agora_video_player {
-  border-radius: 8px;
+  /* border-radius: 8px; */
   background: #454545;
-}
-
-#agora-video-player-track-ba706a6f {
-  border-radius: 12px;
-}
-
-#agora-video-player-track-962c7be9 {
-  border-radius: 12px;
-}
-
-#agora-video-player-track-c6660001 {
-  border-radius: 12px;
-}
-#video_track-962c7be9 {
-  border-radius: 12px;
 }
 
 .MuiDialog-paper {
