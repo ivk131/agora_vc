@@ -1,0 +1,20 @@
+{
+  "files": {
+    "main.css": "/agora_vc/static/css/main.c00f2442.chunk.css",
+    "main.js": "/agora_vc/static/js/main.f901513e.chunk.js",
+    "main.js.map": "/agora_vc/static/js/main.f901513e.chunk.js.map",
+    "runtime-main.js": "/agora_vc/static/js/runtime-main.c7186843.js",
+    "runtime-main.js.map": "/agora_vc/static/js/runtime-main.c7186843.js.map",
+    "static/js/2.1ff81aab.chunk.js": "/agora_vc/static/js/2.1ff81aab.chunk.js",
+    "static/js/2.1ff81aab.chunk.js.map": "/agora_vc/static/js/2.1ff81aab.chunk.js.map",
+    "index.html": "/agora_vc/index.html",
+    "static/css/main.c00f2442.chunk.css.map": "/agora_vc/static/css/main.c00f2442.chunk.css.map",
+    "static/js/2.1ff81aab.chunk.js.LICENSE.txt": "/agora_vc/static/js/2.1ff81aab.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.c7186843.js",
+    "static/js/2.1ff81aab.chunk.js",
+    "static/css/main.c00f2442.chunk.css",
+    "static/js/main.f901513e.chunk.js"
+  ]
+}
