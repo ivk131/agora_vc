@@ -41,6 +41,7 @@ export default function Controls(props) {
   const [isSharingEnabled, setisSharingEnabled] = useState(false);
   const [isMuteAll, setisMuteAll] = useState(false);
   const [openChat, setOpenOpenChat] = useState(false);
+  const [muteAll, setMuteAll] = useState(false);
   const classes = styles();
 
   const handleClose = () => setOpen(true);
@@ -58,6 +59,7 @@ export default function Controls(props) {
     if (type === "audio") {
       await tracks[0].setEnabled(!trackState.audio);
       setTrackState(ps => {
+        console.log("mute mute mute mute --------------", ps);
         return { ...ps, audio: !ps.audio };
       });
     } else if (type === "video") {
@@ -68,19 +70,23 @@ export default function Controls(props) {
     }
   };
 
-  const handleUpdateAudience = () => {
-    auidiences.map(auidience => {
-      update(ref(db, `audiences/${auidience.uid}`), {
-        ...auidience,
-        requestCode: 2,
-      });
+  const handleUpdateAudience = auidience => {
+    update(ref(db, `audiences/${auidience.key}`), {
+      ...auidience,
+      requestCode: 2,
     });
-    alert("alert update called");
   };
 
-  const muteAllAudiences = async type => {
-    // alert("Mute all!!! click");
-    handleUpdateAudience();
+  const muteAllAudiences = async users => {
+    auidiences.map(auidience => {
+      handleUpdateAudience(auidience);
+    });
+    localStorage.setItem("muteAllAudiences", true);
+
+    // setMuteAll(true);
+    setisMuteAll(!isMuteAll);
+    alert("mute all called");
+    // handleUpdateAudience();
     // Object.values(auidiences).map(auidience => {
     //   console.log("auidience", auidience?.value?.Uid);
     // });
@@ -265,13 +271,13 @@ export default function Controls(props) {
 
         <Grid item xs={3} sm={1}>
           <Box textAlign="right">
-            <Tooltip arrow title={trackState.audio ? "Mute All" : "Unmute"}>
+            <Tooltip arrow title={!isMuteAll ? "Mute All" : "Unmute All"}>
               <IconButton
                 variant="contained"
                 color={trackState.audio ? "primary" : ""}
-                onClick={() => muteAllAudiences("audio")}
+                onClick={() => muteAllAudiences(users)}
               >
-                {trackState.audio ? <MicIcon /> : <MicOffIcon />}
+                {!isMuteAll ? <MicIcon /> : <MicOffIcon />}
               </IconButton>
             </Tooltip>
           </Box>

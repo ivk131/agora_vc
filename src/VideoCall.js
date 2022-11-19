@@ -11,7 +11,7 @@ import Controls from "./Controls";
 
 // Connect with firebase
 import { db } from "./utils/firebase";
-import { onValue, ref } from "firebase/database";
+import { onValue, ref, update } from "firebase/database";
 
 export default function VideoCall(props) {
   const { fullName, isLogin } = props;
@@ -21,11 +21,12 @@ export default function VideoCall(props) {
   const [userName, setUserName] = useState("");
   const [auidiences, setAuidiences] = useState([]);
   const [userLogin, setUserLogin] = useState(false);
+  const [muteAllAudiences, setMuteAllAudiences] = useState(false);
 
   const client = useClient();
   const { ready, tracks } = useMicrophoneAndCameraTracks();
 
-  const Push = async () => {
+  const Push = async users => {
     const res = await fetch(
       "https://agora-vc-default-rtdb.firebaseio.com/audiences.json",
       {
@@ -40,6 +41,9 @@ export default function VideoCall(props) {
           userID: localStorage.getItem("response_userId"),
           userName: localStorage.getItem("name"),
           requestCode: 1,
+          channelName_Uid: `${localStorage.getItem(
+            "channelName"
+          )}${localStorage.getItem("Uid")}`,
         }),
       }
     );
@@ -63,14 +67,17 @@ export default function VideoCall(props) {
     let init = async (name, userName) => {
       client.on("user-published", async (user, mediaType) => {
         await client.subscribe(user, mediaType);
+        localStorage.setItem("Uid", user?.uid);
         if (mediaType === "video") {
           setUsers(prevUsers => {
             return [...prevUsers, user];
           });
-          console.log("users_____________________", users);
         }
         if (mediaType === "audio") {
           user.audioTrack.play();
+          // setUsers(prevUsers => {
+          //   return [...prevUsers, user];
+          // });
         }
       });
 
@@ -117,7 +124,7 @@ export default function VideoCall(props) {
 
   useEffect(() => {
     const dbRef = ref(db, "audiences");
-
+    setMuteAllAudiences(localStorage.getItem("muteAllAudiences"));
     onValue(dbRef, snapshort => {
       let records = [];
       console.log("snapshort", snapshort);
@@ -128,7 +135,12 @@ export default function VideoCall(props) {
         setAuidiences(records);
       });
     });
-  }, [users.length]);
+    console.log("auidiences+++", auidiences);
+  }, [
+    users.length,
+    muteAllAudiences,
+    localStorage.getItem("muteAllAudiences"),
+  ]);
 
   return (
     <>

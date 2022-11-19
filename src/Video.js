@@ -9,12 +9,16 @@ import {
   useMicrophoneAndCameraTracks,
   channelName,
 } from "./settings.js";
+import { db } from "./utils/firebase";
+import { onValue, ref, update } from "firebase/database";
 
 export default function Video(props) {
   const { users, tracks, fullName, userName, auidiences } = props;
   const [gridSpacing, setGridSpacing] = useState(12);
   const [auidienceName, setauidienceName] = useState("");
   const [trackState, setTrackState] = useState({ video: true, audio: true });
+  const [updatedAudience, setUpdatedAuidience] = useState([]);
+  const [isAudienceMute, setisAudienceMute] = useState(false);
 
   const client = useClient();
 
@@ -38,7 +42,7 @@ export default function Video(props) {
 
   const totalUsers = users?.length + 1;
 
-  const remoteMute = async type => {
+  const remoteMute = async (type, user) => {
     if (type === "audio") {
       await tracks[0].setEnabled(!trackState.audio);
       setTrackState(ps => {
@@ -59,7 +63,25 @@ export default function Video(props) {
         return { ...ps, video: !ps.video };
       });
     }
+    setisAudienceMute(!isAudienceMute);
   };
+
+  // useEffect(() => {
+  //   const dbRef = ref(db, "audiences");
+
+  //   onValue(dbRef, snapshort => {
+  //     let records = [];
+  //     console.log("snapshort", snapshort);
+  //     snapshort.forEach(childSnapshort => {
+  //       let keyName = childSnapshort.key;
+  //       let value = childSnapshort.val();
+  //       records.push({ key: keyName, value: value });
+  //       setUpdatedAuidience(records);
+  //     });
+  //   });
+  // }, []);
+
+  console.log("---------------------", updatedAudience);
 
   return (
     <Grid
@@ -158,8 +180,12 @@ export default function Video(props) {
                       borderRadius: "4px",
                     }}
                   >
-                    <IconButton onClick={() => remoteMute("audio")}>
-                      <MicIcon color="primary" fontSize="small" />
+                    <IconButton onClick={() => remoteMute("type", user)}>
+                      {user.requestCode === 2 || isAudienceMute ? (
+                        <MicOffIcon color="secondary" fontSize="small" />
+                      ) : (
+                        <MicIcon color="primary" fontSize="small" />
+                      )}
                     </IconButton>
                   </Box>
                 </AgoraVideoPlayer>
